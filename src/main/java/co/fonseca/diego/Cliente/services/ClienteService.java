@@ -1,12 +1,18 @@
 package co.fonseca.diego.Cliente.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import co.fonseca.diego.Cliente.dto.Cliente;
+import co.fonseca.diego.Cliente.model.Empleado;
+import co.fonseca.diego.Cliente.repository.EmpleadoRepository;
 
 @Service
 public class ClienteService {
+
+    @Autowired
+    EmpleadoRepository empleadoRepository;
 
     @Value("${tipoDocumento:null}")
     private String tipoDocumentoExt;
@@ -54,6 +60,10 @@ public class ClienteService {
         System.out.println(cedula);
         return null;
 
+    }
+
+    public Empleado crearEmpleado(Empleado empleado){
+        return empleadoRepository.save(empleado);
     }
 
 }

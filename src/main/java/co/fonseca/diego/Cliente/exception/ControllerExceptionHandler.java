@@ -1,6 +1,8 @@
 package co.fonseca.diego.Cliente.exception;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +49,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ErrorMessage handle(Exception ex,
             WebRequest request) {
+                System.out.println("Error");
                 ErrorMessage message = new ErrorMessage(
                     HttpStatus.INTERNAL_SERVER_ERROR.value(),
                     new Date(),
@@ -55,5 +58,17 @@ public class ControllerExceptionHandler {
         return message;
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+@ExceptionHandler(MethodArgumentNotValidException.class)
+public Map<String, String> handleValidationExceptions(
+  MethodArgumentNotValidException ex) {
+    Map<String, String> errors = new HashMap<>();
+    ex.getBindingResult().getAllErrors().forEach((error) -> {
+        String fieldName = ((FieldError) error).getField();
+        String errorMessage = error.getDefaultMessage();
+        errors.put(fieldName, errorMessage);
+    });
+    return errors;
+}
 
 }
